@@ -1,4 +1,5 @@
-let BASE_URL = "http://localhost:8080";
+let BASE_URL = "https://wasabi.i3s.unice.fr";
+
 export function get(url) {
   return new Promise((resolve, reject) => {
     fetch(BASE_URL + url, {
