@@ -1,7 +1,13 @@
 import React from "react";
 import { AppBar, Typography } from "@material-ui/core";
 import Chart from "react-google-charts";
-import logo from "./logo.svg";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  useLocation
+} from "react-router-dom";
 import "./App.css";
 import * as artistApi from "./services/artistApi";
 
@@ -40,24 +46,50 @@ class App extends React.Component {
             Projet web - Kevin Aubriet, Gabriel Curinga
           </Typography>
         </AppBar>
-        <Chart
-          width={"500px"}
-          height={"300px"}
-          chartType="BarChart"
-          loader={<div>Loading Chart</div>}
-          data={datas}
-          options={{
-            title: "Lengths of dinosaurs, in meters",
-            legend: { position: "none" },
-            colors: ["#e7711c"],
-            histogram: { lastBucketPercentile: 5 },
-            vAxis: { scaleType: "mirrorLog" }
-          }}
-          rootProps={{ "data-testid": "3" }}
-        />
+        <Router>
+          <Switch>
+            <Route exact path="/" />
+            <Route exact path="/comparison">
+              <Chart
+                width={"500px"}
+                height={"300px"}
+                chartType="BarChart"
+                loader={<div>Loading Chart</div>}
+                data={datas}
+                options={{
+                  title: "Lengths of dinosaurs, in meters",
+                  legend: { position: "none" },
+                  colors: ["#e7711c"],
+                  histogram: { lastBucketPercentile: 5 },
+                  vAxis: { scaleType: "mirrorLog" }
+                }}
+                rootProps={{ "data-testid": "3" }}
+              />
+            </Route>
+            <Route path="*">
+              <NoMatch />
+            </Route>
+          </Switch>
+        </Router>
       </div>
     );
   }
+}
+
+/**
+ * No route
+ */
+function NoMatch() {
+  let location = useLocation();
+
+  return (
+    <div>
+      <p>
+        La page <code>{location.pathname}</code> n'existe pas.
+        <a href="/">Vers l'accueil</a>
+      </p>
+    </div>
+  );
 }
 
 export default App;
