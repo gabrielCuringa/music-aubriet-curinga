@@ -1,4 +1,5 @@
 import React from "react";
+import { AppBar, Typography } from "@material-ui/core";
 import Chart from "react-google-charts";
 import logo from "./logo.svg";
 import "./App.css";
@@ -34,34 +35,26 @@ class App extends React.Component {
     datas.unshift(["a", "b"]);
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>HEROKU</p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          <p>{artistsWithMostBand}</p>
-          <Chart
-            width={"500px"}
-            height={"300px"}
-            chartType="BarChart"
-            loader={<div>Loading Chart</div>}
-            data={datas}
-            options={{
-              title: "Lengths of dinosaurs, in meters",
-              legend: { position: "none" },
-              colors: ["#e7711c"],
-              histogram: { lastBucketPercentile: 5 },
-              vAxis: { scaleType: "mirrorLog" }
-            }}
-            rootProps={{ "data-testid": "3" }}
-          />
-        </header>
+        <AppBar position="static">
+          <Typography variant="h6">
+            Projet web - Kevin Aubriet, Gabriel Curinga
+          </Typography>
+        </AppBar>
+        <Chart
+          width={"500px"}
+          height={"300px"}
+          chartType="BarChart"
+          loader={<div>Loading Chart</div>}
+          data={datas}
+          options={{
+            title: "Lengths of dinosaurs, in meters",
+            legend: { position: "none" },
+            colors: ["#e7711c"],
+            histogram: { lastBucketPercentile: 5 },
+            vAxis: { scaleType: "mirrorLog" }
+          }}
+          rootProps={{ "data-testid": "3" }}
+        />
       </div>
     );
   }

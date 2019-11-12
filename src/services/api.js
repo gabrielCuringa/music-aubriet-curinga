@@ -1,4 +1,4 @@
-let BASE_URL = "https://wasabi.i3s.unice.fr";
+let BASE_URL = "https://wasabi.i3s.unice.fr/api/v1/";
 
 export function get(url) {
   return new Promise((resolve, reject) => {
