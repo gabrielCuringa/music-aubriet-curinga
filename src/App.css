@@ -4,6 +4,11 @@ body {
 
 .App {
   text-align: center;
+  color: white;
+}
+
+a {
+  color: azure;
 }
 
 .App-logo {
