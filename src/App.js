@@ -5,10 +5,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
   useLocation
 } from "react-router-dom";
 import "./App.css";
+
 import * as artistApi from "./services/artistApi";
 
 class App extends React.Component {
@@ -41,15 +41,16 @@ class App extends React.Component {
     datas.unshift(["a", "b"]);
     return (
       <div className="App">
-        <AppBar position="static">
-          <Typography variant="h6">
-            Projet web - Kevin Aubriet, Gabriel Curinga
-          </Typography>
-        </AppBar>
         <Router>
           <Switch>
+            <AppBar position="static">
+              <Typography variant="h6">
+                Projet web - Kevin Aubriet, Gabriel Curinga
+              </Typography>
+            </AppBar>
+
             <Route exact path="/" />
-            <Route exact path="/comparison">
+            <Route exact path="/comparison/artists">
               <Chart
                 width={"500px"}
                 height={"300px"}
