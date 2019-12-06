@@ -1,62 +1,65 @@
-import React from "react";
+import React, { createContext, useReducer, useContext } from "react";
 import { AppBar, Typography } from "@material-ui/core";
 import Chart from "react-google-charts";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation
+  useLocation,
+  Link
 } from "react-router-dom";
 import "./App.css";
+import ComparisonArtistsPage from "./screens/comparison/artists/comparisonArtistsPage";
+import StateContext from "./stateContext";
 
-import * as artistApi from "./services/artistApi";
+const StateProvider = ({ reducer, initialState, children }) => (
+  <StateContext.Provider value={reducer}>{children}</StateContext.Provider>
+);
+export const useStateValue = () => useContext(StateContext);
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      artistsWithMostBand: []
-    };
+// export const mapDispatchToProps = dispatch => {
+//   return {
+//     // dispatching plain actions
+//     showLoader: () => dispatch({ type: "show_loader" }),
+//     hideLoader: () => dispatch({ type: "hide_loader" })
+//   };
+// };
+const loaderReducer = (state = false, action) => {
+  switch (action.type) {
+    case "show_loader":
+      return { isFetching: true };
+    case "hide_loader":
+      return { isFetching: false };
+    default:
+      throw new Error("Unexpected action");
   }
+};
 
-  async getArtistsWithMostBand() {
-    let result = await artistApi.getartistsWithMostBand();
-    console.log(result);
-    this.setState({
-      artistsWithMostBand: result
-    });
-  }
+const App = props => {
+  const initialState = { isFetching: false };
+  const [state, dispatch] = useReducer(loaderReducer, initialState);
 
-  componentDidMount() {
-    this.getArtistsWithMostBand();
-  }
-
-  render() {
-    const artistsWithMostBand =
-      this.state.artistsWithMostBand.length > 0 &&
-      this.state.artistsWithMostBand[0].membername;
-    const datas = this.state.artistsWithMostBand.map((el, index) => {
-      return [el.membername, el.sum];
-    });
-    datas.unshift(["a", "b"]);
-    return (
+  return (
+    <StateProvider initialState={initialState} reducer={{ dispatch }}>
       <div className="App">
         <Router>
+          <AppBar position="static">
+            <Typography variant="h6">
+              Projet web - Kevin Aubriet, Gabriel Curinga
+            </Typography>
+          </AppBar>
           <Switch>
-            <AppBar position="static">
-              <Typography variant="h6">
-                Projet web - Kevin Aubriet, Gabriel Curinga
-              </Typography>
-            </AppBar>
-
-            <Route exact path="/" />
+            <Route exact path="/">
+              <Link to="/comparison/artists">Comparaison</Link>
+            </Route>
             <Route exact path="/comparison/artists">
+              <ComparisonArtistsPage />
               <Chart
                 width={"500px"}
                 height={"300px"}
                 chartType="BarChart"
                 loader={<div>Loading Chart</div>}
-                data={datas}
+                data={[]}
                 options={{
                   title: "Lengths of dinosaurs, in meters",
                   legend: { position: "none" },
@@ -73,9 +76,9 @@ class App extends React.Component {
           </Switch>
         </Router>
       </div>
-    );
-  }
-}
+    </StateProvider>
+  );
+};
 
 /**
  * No route

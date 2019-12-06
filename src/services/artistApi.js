@@ -1,8 +1,12 @@
 import * as api from "./api";
-import { loader } from "../components/loader/loader";
 
-export async function getartistsWithMostBand() {
-  loader();
+export async function getArtistsWithMostBand(signal = null) {
   let url = "/artist/member/count/band";
-  return await api.get(url);
+  let result;
+  if (signal == null) {
+    result = await api.get(url);
+  } else {
+    result = await api.get(url, signal);
+  }
+  return result;
 }
