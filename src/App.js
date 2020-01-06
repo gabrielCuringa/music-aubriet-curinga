@@ -9,7 +9,8 @@ import {
   Link
 } from "react-router-dom";
 import "./App.css";
-import ComparisonArtistsPage from "./screens/comparison/artists/comparisonArtistsPage";
+import ComparePage from "./screens/comparison/comparePage";
+import ComparisonArtistsPage from "./screens/comparison/artists/compareArtistsPage";
 import StateContext from "./stateContext";
 
 const StateProvider = ({ reducer, initialState, children }) => (
@@ -24,6 +25,7 @@ export const useStateValue = () => useContext(StateContext);
 //     hideLoader: () => dispatch({ type: "hide_loader" })
 //   };
 // };
+
 const loaderReducer = (state = false, action) => {
   switch (action.type) {
     case "show_loader":
@@ -50,10 +52,11 @@ const App = props => {
           </AppBar>
           <Switch>
             <Route exact path="/">
-              <Link to="/comparison/artists">Comparaison</Link>
+              <Link to="/compare">Comparaison</Link>
             </Route>
-            <Route exact path="/comparison/artists">
-              <ComparisonArtistsPage />
+            <Route exact path="/compare">
+              <ComparePage />
+              {/* <ComparisonArtistsPage />
               <Chart
                 width={"500px"}
                 height={"300px"}
@@ -68,7 +71,10 @@ const App = props => {
                   vAxis: { scaleType: "mirrorLog" }
                 }}
                 rootProps={{ "data-testid": "3" }}
-              />
+              /> */}
+            </Route>
+            <Route exact path="/compare/:first/and/:second">
+              <ComparisonArtistsPage />
             </Route>
             <Route path="*">
               <NoMatch />
