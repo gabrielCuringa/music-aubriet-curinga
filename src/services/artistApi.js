@@ -16,3 +16,9 @@ export async function getArtistByName(name) {
   let result = await api.get(url);
   return result;
 }
+
+export async function getSongsOfAlbumsByArtistName(name) {
+  let url = "/api/v1/artist_all/name/" + name;
+  let result = await api.get(url);
+  return result;
+}

@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import { TextField, Grid } from "@material-ui/core";
+import {
+  TextField,
+  Grid,
+  Avatar,
+  List,
+  ListItemAvatar,
+  ListItemText,
+  ListItem
+} from "@material-ui/core";
 import Autosuggest from "react-autosuggest";
 import * as artistsApi from "../../services/artistApi";
 
@@ -61,12 +69,28 @@ const AutocompleteArtists = props => {
         key={suggestion.key}
       >
         <Grid item xs={4}>
-          <img src={suggestion.datas.picture} alt={"img"} />
+          <Avatar src={suggestion.datas.picture} alt={"img"} />
         </Grid>
         <Grid item xs={8}>
           {suggestion.datas.name}
         </Grid>
       </Grid>
+      // <ListItem key={suggestion.key}>
+      //   <ListItemAvatar>
+      //     <Avatar src={suggestion.datas.picture} alt={"img"} />
+      //   </ListItemAvatar>
+      //   <ListItemText item xs={8}>
+      //     {suggestion.datas.name}
+      //   </ListItemText>
+      // </ListItem>
+    );
+  };
+
+  const renderSuggestionContainer = ({ containerProps, children, query }) => {
+    return (
+      <div {...containerProps}>
+        <List>{children}</List>
+      </div>
     );
   };
 
@@ -85,7 +109,11 @@ const AutocompleteArtists = props => {
       onSuggestionsClearRequested={() => setSuggestions([])}
       renderSuggestion={renderSuggestion}
       inputProps={inputProps}
-      getSuggestionValue={suggestion => onSelect(suggestion.datas.name)}
+      // renderSuggestionsContainer={renderSuggestionContainer}
+      getSuggestionValue={suggestion => {
+        onSelect(suggestion.datas.name);
+        return suggestion.datas.name;
+      }}
     />
   );
 };

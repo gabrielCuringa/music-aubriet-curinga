@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
   Grid,
   IconButton,
   Container,
@@ -11,51 +7,78 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  Button
+  Button,
+  ButtonGroup,
+  Avatar,
+  Typography,
+  ListItemAvatar,
+  makeStyles
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
+import * as artistApi from "../../services/artistApi";
 import AutocompleteArtists from "./autocompleteArtists";
 import "../../styles/autosuggest.css";
+import useLoader from "../../hooks/useLoader";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper
+  }
+}));
 
 const CompareArtistsForm = props => {
+  const classes = useStyles();
+  const [loader, showLoader, hideLoader] = useLoader();
   const [additionalFields, setAdditionalFields] = useState([]);
   const [selectedArtists, setSelectedArtists] = useState([]);
-
-  // const addAutocompleteField = () => {
-  //   let generatedIndex = additionalFields.length;
-  //   let newField = (
-  //     <AutocompleteArtists key={generatedIndex} onSelect={onArtistSelected} />
-  //   );
-
-  //   setAdditionalFields(prevState => [...prevState, newField]);
-  // };
+  const [showAlert, setShowAlert] = useState(false);
 
   const clearAditionalFields = () => {
-    let firstField = (
-      <AutocompleteArtists key={0} onSelect={onArtistSelected} />
-    );
-    setAdditionalFields([firstField]);
+    setAdditionalFields([]);
     setSelectedArtists([]);
   };
 
-  const removeAutocompleteField = index => {
-    setAdditionalFields(
-      additionalFields.filter((el, i) => {
-        console.log(i + " | " + index);
-        return i !== index;
-      })
-    );
-    setSelectedArtists(selectedArtists.filter((_, i) => i !== index));
+  // const removeAutocompleteField = index => {
+  //   setAdditionalFields(
+  //     additionalFields.filter((el, i) => {
+  //       return i !== index;
+  //     })
+  //   );
+  //   setSelectedArtists(selectedArtists.filter((_, i) => i !== index));
+  // };
+
+  const onArtistSelected = (index, value) => {
+    let temp = [...additionalFields];
+    showLoader();
+    artistApi.getArtistByName(value).then(result => {
+      console.log(result);
+      let newField = (
+        <div>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar alt={result.name} src={result.picture.standard}></Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={result.name} secondary={result.genres} />
+          </ListItem>
+        </div>
+      );
+
+      temp[index] = newField;
+      setAdditionalFields(temp);
+      setSelectedArtists(prevState => [...prevState, value]);
+      hideLoader();
+    });
   };
 
-  const onArtistSelected = value => {
-    let generatedIndex = additionalFields.length;
+  const addArtist = () => {
+    let generatedIndex = additionalFields.length + 1;
     let newField = (
-      <AutocompleteArtists key={generatedIndex} onSelect={onArtistSelected} />
+      <AutocompleteArtists
+        key={generatedIndex}
+        onSelect={value => onArtistSelected(generatedIndex, value)}
+      />
     );
     setAdditionalFields(prevState => [...prevState, newField]);
-    setSelectedArtists(prevState => [...prevState, value]);
   };
 
   const compare = () => {
@@ -64,63 +87,66 @@ const CompareArtistsForm = props => {
 
   useState(() => {
     let firstField = (
-      <AutocompleteArtists key={0} onSelect={onArtistSelected} />
+      <AutocompleteArtists
+        key={0}
+        onSelect={value => onArtistSelected(0, value)}
+      />
     );
     setAdditionalFields([firstField]);
   });
 
   return (
     <div>
+      {loader}
       <Grid container spacing={3}>
-        {/* <Grid item>
-          
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={addAutocompleteField}
-          >
-            Ajouter un artiste à comparer
-          </Button>
-        </Grid> */}
+        <Grid item xs={12}>
+          <List className={classes.root}>
+            <p>Sélectionner les artistes à comparer.</p>
+            <ListItem>
+              <ButtonGroup
+                variant="contained"
+                color="primary"
+                aria-label="contained primary button group"
+              >
+                {/*launch comparison*/}
+                <Button variant="contained" color="primary" onClick={addArtist}>
+                  Ajouter un artiste
+                </Button>
+                {/*launch comparison*/}
+                <Button variant="contained" color="primary" onClick={compare}>
+                  Comparer
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={clearAditionalFields}
+                >
+                  Réinitialiser
+                </Button>
+              </ButtonGroup>
+            </ListItem>
+            {additionalFields.map((field, index) => {
+              return (
+                <ListItem key={index}>
+                  {field}
 
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={clearAditionalFields}
-          >
-            Réinitialiser
-          </Button>
-        </Grid>
-
-        <Grid item>
-          {/*launch comparison*/}
-          <Button variant="contained" color="primary" onClick={compare}>
-            Comparer
-          </Button>
+                  {/* {index > 0 && (
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="start"
+                        aria-label="delete"
+                        onClick={() => removeAutocompleteField(index)}
+                      >
+                        <RemoveIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  )} */}
+                </ListItem>
+              );
+            })}
+          </List>
         </Grid>
       </Grid>
-      <List>
-        {additionalFields.map((field, index) => {
-          return (
-            <ListItem key={index}>
-              {field}
-
-              {index > 0 && (
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="start"
-                    aria-label="delete"
-                    onClick={() => removeAutocompleteField(index)}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              )}
-            </ListItem>
-          );
-        })}
-      </List>
     </div>
   );
 };
