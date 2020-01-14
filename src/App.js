@@ -1,5 +1,11 @@
 import React, { createContext, useReducer, useContext } from "react";
-import { AppBar, Typography } from "@material-ui/core";
+import {
+  AppBar,
+  Typography,
+  Button,
+  makeStyles,
+  Toolbar
+} from "@material-ui/core";
 import Chart from "react-google-charts";
 import {
   BrowserRouter as Router,
@@ -9,7 +15,8 @@ import {
   Link
 } from "react-router-dom";
 import "./App.css";
-import ComparisonArtistsPage from "./screens/comparison/artists/comparisonArtistsPage";
+import ComparePage from "./screens/comparison/comparePage";
+import ComparisonArtistsPage from "./screens/comparison/artists/compareArtistsPage";
 import StateContext from "./stateContext";
 
 const StateProvider = ({ reducer, initialState, children }) => (
@@ -17,13 +24,6 @@ const StateProvider = ({ reducer, initialState, children }) => (
 );
 export const useStateValue = () => useContext(StateContext);
 
-// export const mapDispatchToProps = dispatch => {
-//   return {
-//     // dispatching plain actions
-//     showLoader: () => dispatch({ type: "show_loader" }),
-//     hideLoader: () => dispatch({ type: "hide_loader" })
-//   };
-// };
 const loaderReducer = (state = false, action) => {
   switch (action.type) {
     case "show_loader":
@@ -35,7 +35,20 @@ const loaderReducer = (state = false, action) => {
   }
 };
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
+  title: {
+    flexGrow: 1
+  }
+}));
+
 const App = props => {
+  const classes = useStyles();
   const initialState = { isFetching: false };
   const [state, dispatch] = useReducer(loaderReducer, initialState);
 
@@ -44,31 +57,24 @@ const App = props => {
       <div className="App">
         <Router>
           <AppBar position="static">
-            <Typography variant="h6">
-              Projet web - Kevin Aubriet, Gabriel Curinga
-            </Typography>
+            <Toolbar>
+              <Typography variant="h6" className={classes.title}>
+                Projet web - Kevin Aubriet, Gabriel Curinga
+              </Typography>
+              <Button color="inherit" href="/">
+                Accueil
+              </Button>
+              <Button color="inherit" href="/compare">
+                Comparaison
+              </Button>
+            </Toolbar>
           </AppBar>
           <Switch>
             <Route exact path="/">
-              <Link to="/comparison/artists">Comparaison</Link>
+              <Link to="/compare">Comparaison</Link>
             </Route>
-            <Route exact path="/comparison/artists">
-              <ComparisonArtistsPage />
-              <Chart
-                width={"500px"}
-                height={"300px"}
-                chartType="BarChart"
-                loader={<div>Loading Chart</div>}
-                data={[]}
-                options={{
-                  title: "Lengths of dinosaurs, in meters",
-                  legend: { position: "none" },
-                  colors: ["#e7711c"],
-                  histogram: { lastBucketPercentile: 5 },
-                  vAxis: { scaleType: "mirrorLog" }
-                }}
-                rootProps={{ "data-testid": "3" }}
-              />
+            <Route exact path="/compare">
+              <ComparePage />
             </Route>
             <Route path="*">
               <NoMatch />

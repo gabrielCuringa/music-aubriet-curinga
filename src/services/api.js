@@ -1,10 +1,10 @@
-let BASE_URL = "https://wasabi.i3s.unice.fr/api/v1/";
+let BASE_URL = "https://wasabi.i3s.unice.fr";
 
-export function get(url, signal = null) {
+export function get(url) {
+  // console.log("GET on " + BASE_URL + url);
   return new Promise((resolve, reject) => {
     fetch(BASE_URL + url, {
-      method: "get",
-      signal: signal
+      method: "get"
     })
       .then(response => {
         return response.json();
