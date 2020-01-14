@@ -16,7 +16,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import ComparePage from "./screens/comparison/comparePage";
-import ComparisonArtistsPage from "./screens/comparison/artists/compareArtistsPage";
+import StatsPage from "./screens/stats/statsPage";
 import StateContext from "./stateContext";
 
 const StateProvider = ({ reducer, initialState, children }) => (
@@ -67,6 +67,9 @@ const App = props => {
               <Button color="inherit" href="/compare">
                 Comparaison
               </Button>
+              <Button color="inherit" href="/stats">
+                Stats
+              </Button>
             </Toolbar>
           </AppBar>
           <Switch>
@@ -75,6 +78,9 @@ const App = props => {
             </Route>
             <Route exact path="/compare">
               <ComparePage />
+            </Route>
+            <Route exact path="/stats">
+              <StatsPage />
             </Route>
             <Route path="*">
               <NoMatch />
