@@ -43,13 +43,13 @@ const StatsPage = props => {
   const [languagesStats, setLanguagesStats] = useState([]);
   const [genresByPopularity, setGenreByPopularity] = useState([]);
 
-  const initDatas = limit => {
+  const initDatas = () => {
     showLoader();
     statsApi
       .getStatsAboutLyricsLanguages()
       .then(lyricsStats => {
         statsApi
-          .getGenresByPopularity(limit)
+          .getGenresByPopularity(5)
           .then(result => {
             setLanguagesStats(lyricsStats);
             setGenreByPopularity(result);
@@ -59,6 +59,34 @@ const StatsPage = props => {
             hideLoader();
             console.log(error);
           });
+      })
+      .catch(error => {
+        hideLoader();
+        console.log(error);
+      });
+  };
+
+  const updateGenresByPopularity = limit => {
+    showLoader();
+    statsApi
+      .getGenresByPopularity(limit)
+      .then(result => {
+        setGenreByPopularity(result);
+        hideLoader();
+      })
+      .catch(error => {
+        hideLoader();
+        console.log(error);
+      });
+  };
+
+  const updateStatsAboutLanguages = limit => {
+    showLoader();
+    statsApi
+      .getStatsAboutLyricsLanguages(limit)
+      .then(result => {
+        setLanguagesStats(result);
+        hideLoader();
       })
       .catch(error => {
         hideLoader();
@@ -94,9 +122,9 @@ const StatsPage = props => {
     return chartDatas;
   };
 
-  useEffect(() => {
+  useState(() => {
     initDatas();
-  }, [languagesStats.length, genresByPopularity.length]);
+  });
 
   return (
     <div>
@@ -172,7 +200,7 @@ const StatsPage = props => {
                     getAriaValueText={value => value}
                     onChangeCommitted={(event, value) => {
                       console.log(value);
-                      //   initDatas(value);
+                      updateGenresByPopularity(value);
                     }}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
