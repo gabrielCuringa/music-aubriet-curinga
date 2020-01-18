@@ -17,36 +17,42 @@ const HomePage = props => {
 
   const [artistsWithMostAlbums, setArtistsWithMostAlbums] = useState([]);
 
-  useEffect(() => {
-    async function loadData() {
+  useState(() => {
+    function loadData() {
       showLoader();
-      let artistsResult = [];
-      // var res = await artistApi.getArtistById(null, "56d8355153a7ddfc01f9583f");
-
-      // console.log(res.item);
-      // hideLoader();
-      artistApi.getArtistsWithMostAlbums(null, 0, 10).then(results => {
-        // artistApi.getArtistById(null, results[0]._id).then(testResult => {
+      artistApi.getArtistsWithMostAlbums(0, 10).then(results => {
+        let artistsPromises = [];
+        console.log(results);
+        // artistApi.getArtistById(results[0]._id).then(testResult => {
         //   console.log("je suis un test");
         //   console.log(testResult);
         //   hideLoader();
         // });
-
-        // Promise.all({}
-        //   results.map(element => {
-        //     // artistsResult.add(artistApi.getArtistById(element.id));
-        //     var result = artistApi.getArtistById(element.id);
-        //     console.log(result);
-        //   })
-        // );
-        setArtistsWithMostAlbums(results);
-        hideLoader();
+        results.forEach(artist => {
+          artistsPromises.push(artistApi.getArtistById(artist._id));
+        });
+        Promise.all(artistsPromises)
+          .then(artistsPromisesResult => {
+            console.log("---artists");
+            console.log(artistsPromisesResult);
+            setArtistsWithMostAlbums(artistsPromisesResult);
+            hideLoader();
+          })
+          .catch(error => {
+            console.log(error);
+            hideLoader();
+          });
       });
     }
     loadData();
     // console.log(artistsWithMostAlbums);
   }, [artistsWithMostAlbums.length]);
 
+  let artistsResult = [];
+  // var res = await artistApi.getArtistById("56d8355153a7ddfc01f9583f");
+
+  // console.log(res.item);
+  // hideLoader();
   const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1
