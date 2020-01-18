@@ -5,12 +5,12 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
-  Link
+  useLocation
 } from "react-router-dom";
 import "./App.css";
 import ComparisonArtistsPage from "./screens/comparison/artists/comparisonArtistsPage";
 import StateContext from "./stateContext";
+import HomePage from "./screens/home/homePage";
 
 const StateProvider = ({ reducer, initialState, children }) => (
   <StateContext.Provider value={reducer}>{children}</StateContext.Provider>
@@ -50,7 +50,7 @@ const App = props => {
           </AppBar>
           <Switch>
             <Route exact path="/">
-              <Link to="/comparison/artists">Comparaison</Link>
+              <HomePage />
             </Route>
             <Route exact path="/comparison/artists">
               <ComparisonArtistsPage />
