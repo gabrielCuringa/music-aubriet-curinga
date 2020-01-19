@@ -11,6 +11,7 @@ import useLoader from "../../hooks/useLoader";
 import ListCard from "./component/listCardHome";
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import ListAlbums from "./component/listAlbums";
 
 const HomePage = props => {
   const [loader, showLoader, hideLoader] = useLoader();
@@ -23,11 +24,7 @@ const HomePage = props => {
       artistApi.getArtistsWithMostAlbums(0, 10).then(results => {
         let artistsPromises = [];
         console.log(results);
-        // artistApi.getArtistById(results[0]._id).then(testResult => {
-        //   console.log("je suis un test");
-        //   console.log(testResult);
-        //   hideLoader();
-        // });
+
         results.forEach(artist => {
           artistsPromises.push(artistApi.getArtistById(artist._id));
         });
@@ -71,17 +68,17 @@ const HomePage = props => {
       <div>
         <Grid container direction="column">
           <Grid container justifyContent="flex-start">
-            <h1>Artistes les plus productifs</h1>
+            <h1 style={{ color: "white" }}>Artistes les plus productifs</h1>
           </Grid>
 
           <ListCard list={artistsWithMostAlbums}></ListCard>
         </Grid>
         <Grid container direction="column">
           <Grid container justifyContent="flex-start">
-            <h1>Artistes les plus productifs</h1>
+            <h1 style={{ color: "white" }}>Albums les plus</h1>
           </Grid>
 
-          <ListCard list={artistsWithMostAlbums}></ListCard>
+          <ListAlbums list={artistsWithMostAlbums}></ListAlbums>
         </Grid>
       </div>
     );

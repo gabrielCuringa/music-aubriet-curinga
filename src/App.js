@@ -17,6 +17,7 @@ import "./App.css";
 import ComparePage from "./screens/comparison/comparePage";
 import StateContext from "./stateContext";
 import HomePage from "./screens/home/homePage";
+import testComponent from "./screens/components/testComponent";
 
 const StateProvider = ({ reducer, initialState, children }) => (
   <StateContext.Provider value={reducer}>{children}</StateContext.Provider>
@@ -75,6 +76,11 @@ const App = props => {
             <Route exact path="/compare">
               <ComparePage />
             </Route>
+            <Route
+              exact
+              path="/compare/:name"
+              component={testComponent}
+            ></Route>
             <Route path="*">
               <NoMatch />
             </Route>
