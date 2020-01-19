@@ -56,7 +56,7 @@ const AutocompleteArtists = props => {
       });
       setSuggestions(suggestionsMap);
     }
-  }, 500);
+  }, 1000);
 
   const renderSuggestion = (suggestion, isHighlighted) => {
     return (

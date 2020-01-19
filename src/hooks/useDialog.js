@@ -10,8 +10,14 @@ import {
 
 const useDialog = props => {
   const [visible, setVisible] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [actions, setActions] = useState([]);
 
-  const showDialog = () => {
+  const showDialog = (title, content, actions) => {
+    setTitle(title);
+    setContent(content);
+    setActions(actions);
     setVisible(true);
   };
 
@@ -26,19 +32,20 @@ const useDialog = props => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{props && props.title}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {props && props.content}
+          {content}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        {props &&
-          props.actions.map(action => {
+        {actions.length > 0 &&
+          actions.map((action, index) => {
             return (
               <Button
+                key={index}
                 onClick={() => {
-                  action.onClick();
+                  action.onClick && action.onClick();
                   hideDialog();
                 }}
                 color={action.color}

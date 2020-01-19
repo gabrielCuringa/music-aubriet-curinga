@@ -38,20 +38,9 @@ const CompareArtistsForm = props => {
     setSelectedArtists([]);
   };
 
-  // const removeAutocompleteField = index => {
-  //   setAdditionalFields(
-  //     additionalFields.filter((el, i) => {
-  //       return i !== index;
-  //     })
-  //   );
-  //   setSelectedArtists(selectedArtists.filter((_, i) => i !== index));
-  // };
-
   const onArtistSelected = (index, value) => {
     let temp = [...additionalFields];
-    showLoader();
     artistApi.getArtistByName(value).then(result => {
-      console.log(result);
       let newField = (
         <div>
           <ListItem>
@@ -66,7 +55,6 @@ const CompareArtistsForm = props => {
       temp[index] = newField;
       setAdditionalFields(temp);
       setSelectedArtists(prevState => [...prevState, value]);
-      hideLoader();
     });
   };
 

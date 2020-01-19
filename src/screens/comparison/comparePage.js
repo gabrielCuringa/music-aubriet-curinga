@@ -8,7 +8,10 @@ import {
   ExpansionPanelSummary,
   Typography,
   ExpansionPanelDetails,
-  makeStyles
+  makeStyles,
+  List,
+  ListItem,
+  ListItemText
 } from "@material-ui/core";
 import * as artistsApi from "../../services/artistApi";
 import _ from "lodash";
@@ -29,22 +32,12 @@ const useStyles = makeStyles(theme => ({
     },
     heading: {
       fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular
+      fontWeight: theme.typography.fontWeightBold
+    },
+    textBody: {
+      fontSize: theme.typography.pxToRem(10),
+      fontWeight: theme.typography.fontWeightLight
     }
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3)
-  },
-  large: {
-    width: theme.spacing(7),
-    height: theme.spacing(7)
-  },
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 200
   }
 }));
 
@@ -54,32 +47,11 @@ const ComparePage = props => {
   const [dialog, showDialog, hideDialog] = useDialog();
   const [artistsDatas, setArtistsDatas] = useState([]);
 
-  const compare = selectedArtists => {
-    console.log(selectedArtists);
-    console.log("starting...");
-    showLoader();
-    let artistsPromises = [];
-    selectedArtists.forEach(artist => {
-      artistsPromises.push(artistsApi.getSongsOfAlbumsByArtistName(artist));
-    });
-    Promise.all(artistsPromises)
-      .then(artistsPromisesResult => {
-        console.log("---artists");
-        console.log(artistsPromisesResult);
-        setArtistsDatas(artistsPromisesResult);
-        hideLoader();
-      })
-      .catch(error => {
-        console.log(error);
-        hideLoader();
-      });
-  };
-
-  function getAgeFromLifeSpan(begin) {
+  const getAgeFromLifeSpan = begin => {
     let beginTime = new Date(begin).getTime();
     let age = (new Date().getTime() - beginTime) / (1000 * 60 * 60 * 24 * 365);
     return Math.floor(age);
-  }
+  };
 
   const basicInformationsDatas = () => {
     let chartDatas = [
@@ -108,18 +80,7 @@ const ComparePage = props => {
   };
 
   const deezerFansDatas = () => {
-    let chartDatas = [
-      [
-        "Fans Deezer"
-        // firstInformations.name,
-        // secondInformations.name
-      ],
-      [
-        "Fans"
-        // firstInformations.deezerFans,
-        // secondInformations.deezerFans
-      ]
-    ];
+    let chartDatas = [["Fans Deezer"], ["Fans"]];
     artistsDatas.forEach(data => {
       chartDatas[0].push(data.name);
       chartDatas[1].push(data.deezerFans);
@@ -136,9 +97,8 @@ const ComparePage = props => {
         { type: "date", id: "End" }
       ]
     ];
-    artistsDatas.forEach(artist => {
-      // let data = [];
 
+    artistsDatas.forEach(artist => {
       artist.albums.forEach(album => {
         let releaseDate;
         let releaseDateWithDuration;
@@ -158,17 +118,50 @@ const ComparePage = props => {
             albumDuration[1]
           );
         }
-        chartDatas.push([
-          artist.name,
-          album.title,
-          releaseDate,
-          releaseDateWithDuration
-        ]);
+        if (releaseDate && releaseDateWithDuration)
+          chartDatas.push([
+            artist.name,
+            album.title,
+            releaseDate,
+            releaseDateWithDuration
+          ]);
       });
     });
-    console.log("--- timeline");
-    console.log(chartDatas);
     return chartDatas;
+  };
+
+  const albumsNumberDatas = () => {
+    let chartDatas = [["Artiste", "Nombre d'albums"]];
+    artistsDatas.forEach(artist => {
+      chartDatas.push([artist.name, artist.albums && artist.albums.length]);
+    });
+    return chartDatas;
+  };
+
+  const compare = selectedArtists => {
+    if (selectedArtists.length <= 0) {
+      showDialog(
+        "Informations",
+        "Vous devez sélectionner au minimum un artiste.",
+        [{ text: "Fermer" }]
+      );
+    } else {
+      showLoader();
+      let artistsPromises = [];
+      selectedArtists.forEach(artist => {
+        artistsPromises.push(artistsApi.getSongsOfAlbumsByArtistName(artist));
+      });
+      Promise.all(artistsPromises)
+        .then(artistsPromisesResult => {
+          console.log(artistsPromisesResult);
+          setArtistsDatas(artistsPromisesResult);
+          hideLoader();
+        })
+        .catch(error => {
+          console.log(error);
+          hideLoader();
+        });
+    }
   };
 
   return (
@@ -200,7 +193,7 @@ const ComparePage = props => {
                   loader={<div>Loading Chart</div>}
                   data={basicInformationsDatas()}
                   options={{
-                    title: "Informations basiques",
+                    title: "Âges des artistes",
                     bar: { groupWidth: "95%" },
                     legend: { position: "none" }
                   }}
@@ -230,7 +223,6 @@ const ComparePage = props => {
                   data={deezerFansDatas()}
                   options={{
                     title: "Deezer fans",
-                    chartArea: { width: "60%" },
                     isStacked: true,
                     hAxis: {
                       title: "Total deezer fans",
@@ -259,13 +251,55 @@ const ComparePage = props => {
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Grid item xs={12}>
-                <Chart
-                  chartType="Timeline"
-                  loader={<div>Loading Chart</div>}
-                  data={timelineDatas()}
-                  rootProps={{ "data-testid": "1" }}
-                />
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography className={classes.textBody}>
+                    Les albums ne contenant pas le champ "length" ou une date de
+                    sortie correcte ne sont pas affichés.
+                  </Typography>
+                  <Chart
+                    chartType="Timeline"
+                    loader={<div>Loading Chart</div>}
+                    data={timelineDatas()}
+                    options={{
+                      title: "Timeline",
+                      chartArea: { width: "60%" },
+                      isStacked: true,
+                      hAxis: {
+                        title: "Total deezer fans",
+                        minValue: 0
+                      }
+                    }}
+                    rootProps={{ "data-testid": "1" }}
+                  />
+                </Grid>
+                {/* {unvalidsAlbumsForTimeline.length > 0 && (
+                  <Grid item xs={12}>
+                    <Typography>
+                      Les albums suivants n'ont pas pû être classés.
+                    </Typography>
+                    <List>
+                      {unvalidsAlbumsForTimeline.forEach(album => {
+                        return (
+                          <ListItem>
+                            <ListItemText>{album.title}</ListItemText>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Grid>
+                )} */}
+                <Grid item xs={12}>
+                  <Chart
+                    chartType="PieChart"
+                    loader={<div>Loading Chart</div>}
+                    data={albumsNumberDatas()}
+                    options={{
+                      title: "Nombre d'albums"
+                    }}
+                    rootProps={{ "data-testid": "1" }}
+                  />
+                </Grid>
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
