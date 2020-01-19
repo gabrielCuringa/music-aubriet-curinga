@@ -18,7 +18,6 @@ import ComparePage from "./screens/comparison/comparePage";
 import StatsPage from "./screens/stats/statsPage";
 import StateContext from "./stateContext";
 import HomePage from "./screens/home/homePage";
-import testComponent from "./screens/components/testComponent";
 
 const StateProvider = ({ reducer, initialState, children }) => (
   <StateContext.Provider value={reducer}>{children}</StateContext.Provider>
@@ -77,16 +76,18 @@ const App = props => {
             <Route exact path="/">
               <HomePage />
             </Route>
-            <Route exact path="/compare">
-              <ComparePage />
-            </Route>
+            <Route
+              exact
+              path="/compare"
+              render={props => <ComparePage {...props} />}
+            ></Route>
             <Route exact path="/stats">
               <StatsPage />
             </Route>
             <Route
               exact
               path="/compare/:name"
-              component={testComponent}
+              render={props => <ComparePage {...props} />}
             ></Route>
             <Route path="*">
               <NoMatch />

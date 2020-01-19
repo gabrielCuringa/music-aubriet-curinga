@@ -163,12 +163,13 @@ const ComparePage = props => {
         });
     }
   };
-
   return (
     <div>
       {loader}
       {dialog}
       <Container>
+        <h1>{props.match.params.name}</h1>
+
         <Grid container>
           <Grid item xs={12}>
             <CompareArtistsForm compare={compare} />

@@ -90,7 +90,6 @@ const CompareArtistsForm = props => {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <List className={classes.root}>
-            <h2>{props.match.params.name}</h2>
             <p>Sélectionner les artistes à comparer.</p>
             <ListItem>
               <ButtonGroup
