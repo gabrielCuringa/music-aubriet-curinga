@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,6 +7,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Fab from "@material-ui/core/Fab";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import PauseIcon from "@material-ui/icons/Pause";
 
 const useStyles = makeStyles({
   table: {
@@ -20,13 +23,67 @@ const useStyles = makeStyles({
 
 export default function ListSongs(props) {
   const classes = useStyles();
+  const [stateSongs, setStateSongs] = useState([]);
 
-  const playAudio = function(indexToPlay) {
+  const modifyItem = (idToSet, bool) => {
+    setStateSongs(([idToSet] = bool));
+    // setStateSongs([
+    //   ...stateSongs,
+    //   {
+    //     id: stateSongs.length,
+    //     value: bool
+    //   }
+    // ]);
+  };
+
+  useEffect(() => {
+    // props.list.map(() => {
+    //   stateSongs.push(false);
+    // });
+    // setStateSongs(stateSongs);
+    console.log("je recharge");
+    props.list.map(() => {
+      setStateSongs(stateSongs => [...stateSongs, false]);
+    });
+  }, stateSongs.length);
+
+  const play = function(indexToPlay) {
     console.log("child : " + indexToPlay);
+
+    const audioEls = document.getElementsByTagName("audio");
+    let renderAudio = [...stateSongs];
+    for (var i = 0; i < audioEls.length; i++) {
+      audioEls[i].pause();
+      audioEls[i].load();
+    }
+    for (var j = 0; j < renderAudio.length; j++) {
+      renderAudio[j] = false;
+    }
+    console.log(renderAudio);
+    setStateSongs(renderAudio);
+    console.log(stateSongs);
+
     const audioEl = document.getElementsByClassName("audio-element")[
       indexToPlay
     ];
+
+    let newArr = [...stateSongs]; // copying the old datas array
+    newArr[indexToPlay] = true; // replace e.target.value with whatever you want to change it to
+
+    setStateSongs(newArr);
+
     audioEl.play();
+  };
+  const pause = function(indexToPause) {
+    console.log("child : " + indexToPause);
+    const audioEl = document.getElementsByClassName("audio-element")[
+      indexToPause
+    ];
+    let newArr = [...stateSongs]; // copying the old datas array
+    newArr[indexToPause] = false; // replace e.target.value with whatever you want to change it to
+    setStateSongs(newArr);
+
+    audioEl.pause();
   };
 
   return (
@@ -56,10 +113,17 @@ export default function ListSongs(props) {
               <TableCell align="right">{song.publicationDate}</TableCell>
               <TableCell align="right">
                 <div>
-                  <button onClick={() => playAudio(i)}>
-                    <span>Play Audio</span>
-                  </button>
-                  <audio className="audio-element">
+                  {stateSongs[i] == false ? (
+                    <Fab color="primary" onClick={() => play(i)}>
+                      <PlayArrowIcon></PlayArrowIcon>
+                    </Fab>
+                  ) : (
+                    <Fab color="primary" onClick={() => pause(i)}>
+                      <PauseIcon></PauseIcon>
+                    </Fab>
+                  )}
+
+                  <audio className="audio-element" onEnded={() => pause(i)}>
                     <source src={song.preview}></source>
                   </audio>
                 </div>
