@@ -1,4 +1,11 @@
-import React from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  Link,
+  View
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import CardHome from "./cardHome";
@@ -9,6 +16,11 @@ import Fab from "@material-ui/core/Fab";
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
 import Icon from "@material-ui/core/Icon";
 import Slider from "infinite-react-carousel";
+import { Grid } from "@material-ui/core";
+
+// const [index, setIndex] = useState([]);
+
+// const [index, setIndex] = useState([]);
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,15 +32,23 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   }
 }));
-const goToCompare = function(id) {
-  console.log(id);
+const indexOf = function() {
+  // console.log(index);
+};
+
+const handleIndexChange = function(indexToChange) {
+  console.log("child : " + indexToChange);
+  this.props.onSelectIndex(indexToChange);
 };
 
 export default function ListCardHome(props) {
   const classes = useStyles();
 
   return (
-    <Slider dots>
+    <Slider
+      dots
+      // afterChange={indexAfterChange => handleIndexChange(indexAfterChange)}
+    >
       {props.list.map(art => (
         <div>
           <CardHome artist={art}></CardHome>
@@ -39,10 +59,16 @@ export default function ListCardHome(props) {
               justifyContent: "center"
             }}
           >
-            <Fab variant="extended" href={"/compare/" + art.name}>
+            <Fab variant="extended" href={"/compare/artist/" + art.name}>
               <CompareArrowsIcon className={classes.extendedIcon} />
               Compare
             </Fab>
+
+            {/* <Grid container direction="column">
+              <Grid container justifyContent="flex-start">
+                <h1 style={{ color: "white" }}>Albums de {art.name}</h1>
+              </Grid>
+            </Grid> */}
           </div>
         </div>
       ))}

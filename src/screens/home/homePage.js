@@ -17,6 +17,7 @@ const HomePage = props => {
   const [loader, showLoader, hideLoader] = useLoader();
 
   const [artistsWithMostAlbums, setArtistsWithMostAlbums] = useState([]);
+  const [index, setIndex] = useState([]);
 
   useState(() => {
     function loadData() {
@@ -63,6 +64,11 @@ const HomePage = props => {
     }
   }));
 
+  const handleIndex = indexChange => {
+    console.log("parent : " + indexChange);
+    this.setState({ language: indexChange });
+  };
+
   function build() {
     return (
       <div>
@@ -71,15 +77,16 @@ const HomePage = props => {
             <h1 style={{ color: "white" }}>Artistes les plus productifs</h1>
           </Grid>
 
-          <ListCard list={artistsWithMostAlbums}></ListCard>
+          <ListCard
+            onSelectIndex={onSelectedIndex => handleIndex(onSelectedIndex)}
+            list={artistsWithMostAlbums}
+          ></ListCard>
         </Grid>
-        <Grid container direction="column">
+        {/* <Grid container direction="column">
           <Grid container justifyContent="flex-start">
-            <h1 style={{ color: "white" }}>Albums les plus</h1>
+            <h1 style={{ color: "white" }}>Ses albums</h1>
           </Grid>
-
-          <ListAlbums list={artistsWithMostAlbums}></ListAlbums>
-        </Grid>
+        </Grid> */}
       </div>
     );
   }

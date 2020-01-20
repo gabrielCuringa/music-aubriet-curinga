@@ -10,7 +10,7 @@ import {
   ListItem
 } from "@material-ui/core";
 import Autosuggest from "react-autosuggest";
-import * as artistsApi from "../../services/artistApi";
+import * as artistsApi from "../../../../services/artistApi";
 
 const style = {
   borderRadius: "3px",
@@ -40,14 +40,14 @@ const AutocompleteArtists = props => {
     return val;
   };
 
-  const getArtistsSearch = async input => {
-    const response = await artistsApi.getArtistsSearch(input);
+  const getAlbumsSearch = async input => {
+    const response = await artistsApi.getAlbumsSearch(input);
     return response;
   };
 
   const onSuggestionsFetchRequested = _.debounce(async input => {
     if (input.value) {
-      let suggestions = await getArtistsSearch(input.value);
+      let suggestions = await getAlbumsSearch(input.value);
       let suggestionsMap = suggestions.map((item, index) => {
         return {
           datas: item,
@@ -97,7 +97,7 @@ const AutocompleteArtists = props => {
   const inputProps = {
     value: suggestionSelected, // usually comes from the application state
     onChange: onChange, // called every time the input value changes
-    placeholder: "Artiste"
+    placeholder: "Album"
   };
 
   return (
@@ -118,4 +118,4 @@ const AutocompleteArtists = props => {
   );
 };
 
-export default AutocompleteArtists;
+export default AutocompleteAlbums;
