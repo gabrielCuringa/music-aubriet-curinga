@@ -13,15 +13,15 @@ import {
   ListItem,
   ListItemText
 } from "@material-ui/core";
-import * as artistsApi from "../../services/artistApi";
+import * as artistsApi from "../../../services/artistApi";
 import _ from "lodash";
-import "../../styles/autosuggest.css";
-import CompareArtistsForm from "../components/compareArtistsForm";
+import "../../../styles/autosuggest.css";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import useLoader from "../../hooks/useLoader";
-import useDialog from "../../hooks/useDialog";
+import useLoader from "../../../hooks/useLoader";
+import useDialog from "../../../hooks/useDialog";
 import Chart from "react-google-charts";
 import randomColor from "random-material-color";
+import CompareArtistsForm from "./components/compareArtistsForm";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ComparePage = props => {
+const CompareAlbumsPage = props => {
   const classes = useStyles();
   const [loader, showLoader, hideLoader] = useLoader();
   const [dialog, showDialog, hideDialog] = useDialog();
@@ -163,7 +163,6 @@ const ComparePage = props => {
         });
     }
   };
-
   return (
     <div>
       {loader}
@@ -309,4 +308,4 @@ const ComparePage = props => {
   );
 };
 
-export default ComparePage;
+export default CompareAlbumsPage;

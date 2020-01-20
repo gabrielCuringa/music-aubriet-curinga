@@ -14,10 +14,10 @@ import {
   ListItemAvatar,
   makeStyles
 } from "@material-ui/core";
-import * as artistApi from "../../services/artistApi";
+import * as artistApi from "../../../../services/artistApi";
 import AutocompleteArtists from "./autocompleteArtists";
-import "../../styles/autosuggest.css";
-import useLoader from "../../hooks/useLoader";
+import "../../../../styles/autosuggest.css";
+import useLoader from "../../../../hooks/useLoader";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,6 +74,7 @@ const CompareArtistsForm = props => {
   };
 
   useState(() => {
+    console.log();
     let firstField = (
       <AutocompleteArtists
         key={0}
