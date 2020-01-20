@@ -22,7 +22,7 @@ const HomePage = props => {
   useState(() => {
     function loadData() {
       showLoader();
-      artistApi.getArtistsWithMostAlbums(0, 10).then(results => {
+      artistApi.getArtistsWithMostAlbums(0, 3).then(results => {
         let artistsPromises = [];
         console.log(results);
 
@@ -82,11 +82,11 @@ const HomePage = props => {
             list={artistsWithMostAlbums}
           ></ListCard>
         </Grid>
-        {/* <Grid container direction="column">
+        <Grid container direction="column">
           <Grid container justifyContent="flex-start">
             <h1 style={{ color: "white" }}>Ses albums</h1>
           </Grid>
-        </Grid> */}
+        </Grid>
       </div>
     );
   }
