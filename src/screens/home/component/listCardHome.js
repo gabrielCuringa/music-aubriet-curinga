@@ -67,6 +67,7 @@ export default function ListCardHome(props) {
             {/* <Grid container direction="column">
               <Grid container justifyContent="flex-start">
                 <h1 style={{ color: "white" }}>Albums de {art.name}</h1>
+                <ListAlbums list={props.list}></ListAlbums>
               </Grid>
             </Grid> */}
           </div>
