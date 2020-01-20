@@ -22,3 +22,17 @@ export async function getSongsOfAlbumsByArtistName(name) {
   let result = await api.get(url);
   return result;
 }
+
+export async function getArtistsWithMostAlbums(indexPage, limit) {
+  let url = "/api/v1/artist/count/album?skip=" + indexPage + "&limit=" + limit;
+  let result = await api.get(url);
+
+  return result;
+}
+
+export async function getArtistById(id) {
+  let url = "/api/v1/artist/id/" + id;
+  let result = await api.get(url);
+
+  return result;
+}

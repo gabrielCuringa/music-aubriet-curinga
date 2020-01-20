@@ -11,13 +11,13 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
-  Link
+  useLocation
 } from "react-router-dom";
 import "./App.css";
-import ComparePage from "./screens/comparison/comparePage";
+import CompareArtistPage from "./screens/comparison/artist/compareArtistPage";
 import StatsPage from "./screens/stats/statsPage";
 import StateContext from "./stateContext";
+import HomePage from "./screens/home/homePage";
 
 const StateProvider = ({ reducer, initialState, children }) => (
   <StateContext.Provider value={reducer}>{children}</StateContext.Provider>
@@ -64,7 +64,7 @@ const App = props => {
               <Button color="inherit" href="/">
                 Accueil
               </Button>
-              <Button color="inherit" href="/compare">
+              <Button color="inherit" href="/compare/artist">
                 Comparaison
               </Button>
               <Button color="inherit" href="/stats">
@@ -74,14 +74,21 @@ const App = props => {
           </AppBar>
           <Switch>
             <Route exact path="/">
-              <Link to="/compare">Comparaison</Link>
+              <HomePage />
             </Route>
-            <Route exact path="/compare">
-              <ComparePage />
-            </Route>
+            <Route
+              exact
+              path="/compare/artist/"
+              render={props => <CompareArtistPage {...props} />}
+            ></Route>
             <Route exact path="/stats">
               <StatsPage />
             </Route>
+            <Route
+              exact
+              path="/compare/artist/:name"
+              render={props => <CompareArtistPage {...props} />}
+            ></Route>
             <Route path="*">
               <NoMatch />
             </Route>
