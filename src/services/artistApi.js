@@ -6,19 +6,22 @@ export async function getArtistsWithMostBand() {
   return result;
 }
 
-export async function getArtistsSearch(serachText) {
-  let url = "/search/fulltext/" + serachText;
+export async function getArtistsSearch(searchText) {
+  let encoded = encodeURIComponent(searchText);
+  let url = "/search/fulltext/" + encoded;
   return await api.get(url);
 }
 
 export async function getArtistByName(name) {
-  let url = "/api/v1/artist/name/" + name;
+  let encoded = encodeURIComponent(name);
+  let url = "/api/v1/artist/name/" + encoded;
   let result = await api.get(url);
   return result;
 }
 
 export async function getSongsOfAlbumsByArtistName(name) {
-  let url = "/api/v1/artist_all/name/" + name;
+  let encoded = encodeURIComponent(name);
+  let url = "/api/v1/artist_all/name/" + encoded;
   let result = await api.get(url);
   return result;
 }

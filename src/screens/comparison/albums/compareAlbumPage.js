@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CompareArtistPage = props => {
+const CompareAlbumsPage = props => {
   const classes = useStyles();
   const [loader, showLoader, hideLoader] = useLoader();
   const [dialog, showDialog, hideDialog] = useDialog();
