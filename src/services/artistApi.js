@@ -31,7 +31,7 @@ export async function getArtistsWithMostAlbums(indexPage, limit) {
 }
 
 export async function getArtistById(id) {
-  let url = "/api/v1/artist/id/" + id;
+  let url = "/api/v1/artist_all/id/" + id;
   let result = await api.get(url);
 
   return result;

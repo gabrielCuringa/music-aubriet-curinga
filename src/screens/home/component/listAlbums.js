@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Coverflow from "react-coverflow";
 import { StyleRoot } from "radium";
+import ListSongs from "./listSongs";
+import { Grid } from "@material-ui/core";
 
 export default function ListAlbums(props) {
   // const classes = useStyles();
 
-  const imageClick = () => {
-    console.log("Click");
+  const [index, setIndex] = useState(0);
+
+  const handleIndexChange = function(indexToChange) {
+    console.log("child : " + indexToChange);
+    setIndex(indexToChange);
   };
   return (
-    <StyleRoot>
+    <div>
       <Coverflow
+        enableScroll={false}
         displayQuantityOfSide={1}
         infiniteScroll
         enableHeading
-        enableScroll="false"
+        active={0}
         media={{
           "@media (max-width: 900px)": {
             width: "600px",
@@ -27,10 +33,21 @@ export default function ListAlbums(props) {
           }
         }}
       >
-        {props.list.map(art => (
-          <img src={art.picture.xl} alt={art.name}></img>
+        {props.list.map((album, i) => (
+          <img
+            key={i}
+            src={album && album.cover && album.cover.xl}
+            alt={album.title}
+            onClick={() => handleIndexChange(i)}
+          ></img>
         ))}
       </Coverflow>
-    </StyleRoot>
+
+      <h1 style={{ color: "white" }}>
+        Sons de l'album " {props.list[index].title} "
+      </h1>
+
+      <ListSongs list={props.list[index].songs}></ListSongs>
+    </div>
   );
 }
