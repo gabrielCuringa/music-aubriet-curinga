@@ -25,22 +25,7 @@ export default function ListSongs(props) {
   const classes = useStyles();
   const [stateSongs, setStateSongs] = useState([]);
 
-  const modifyItem = (idToSet, bool) => {
-    setStateSongs(([idToSet] = bool));
-    // setStateSongs([
-    //   ...stateSongs,
-    //   {
-    //     id: stateSongs.length,
-    //     value: bool
-    //   }
-    // ]);
-  };
-
   useEffect(() => {
-    // props.list.map(() => {
-    //   stateSongs.push(false);
-    // });
-    // setStateSongs(stateSongs);
     console.log("je recharge");
     props.list.map(() => {
       setStateSongs(stateSongs => [...stateSongs, false]);
@@ -59,9 +44,7 @@ export default function ListSongs(props) {
     for (var j = 0; j < renderAudio.length; j++) {
       renderAudio[j] = false;
     }
-    console.log(renderAudio);
     setStateSongs(renderAudio);
-    console.log(stateSongs);
 
     const audioEl = document.getElementsByClassName("audio-element")[
       indexToPlay
