@@ -46,46 +46,20 @@ const HomePage = props => {
     // console.log(artistsWithMostAlbums);
   }, [artistsWithMostAlbums.length]);
 
-  let artistsResult = [];
   // var res = await artistApi.getArtistById("56d8355153a7ddfc01f9583f");
 
   // console.log(res.item);
   // hideLoader();
-  const useStyles = makeStyles(theme => ({
-    root: {
-      flexGrow: 1
-    },
-    paper: {
-      height: 140,
-      width: 100
-    },
-    control: {
-      padding: theme.spacing(2)
-    }
-  }));
-
-  const handleIndex = indexChange => {
-    console.log("parent : " + indexChange);
-    this.setState({ language: indexChange });
-  };
 
   function build() {
     return (
       <div>
         <Grid container direction="column">
-          <Grid container justifyContent="flex-start">
+          <Grid container>
             <h1 style={{ color: "white" }}>Artistes les plus productifs</h1>
           </Grid>
 
-          <ListCard
-            onSelectIndex={onSelectedIndex => handleIndex(onSelectedIndex)}
-            list={artistsWithMostAlbums}
-          ></ListCard>
-        </Grid>
-        <Grid container direction="column">
-          <Grid container justifyContent="flex-start">
-            <h1 style={{ color: "white" }}>Ses albums</h1>
-          </Grid>
+          <ListCard list={artistsWithMostAlbums}></ListCard>
         </Grid>
       </div>
     );

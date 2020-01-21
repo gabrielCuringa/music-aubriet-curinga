@@ -17,10 +17,7 @@ import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
 import Icon from "@material-ui/core/Icon";
 import Slider from "infinite-react-carousel";
 import { Grid } from "@material-ui/core";
-
-// const [index, setIndex] = useState([]);
-
-// const [index, setIndex] = useState([]);
+import ListAlbums from "./listAlbums";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,47 +29,48 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   }
 }));
-const indexOf = function() {
-  // console.log(index);
-};
-
-const handleIndexChange = function(indexToChange) {
-  console.log("child : " + indexToChange);
-  this.props.onSelectIndex(indexToChange);
-};
 
 export default function ListCardHome(props) {
   const classes = useStyles();
+  const [index, setIndex] = useState(0);
+
+  const handleIndexChange = function(indexToChange) {
+    console.log("child : " + indexToChange);
+    setIndex(indexToChange);
+  };
 
   return (
-    <Slider
-      dots
-      // afterChange={indexAfterChange => handleIndexChange(indexAfterChange)}
-    >
-      {props.list.map(art => (
-        <div>
-          <CardHome artist={art}></CardHome>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <Fab variant="extended" href={"/compare/artist/" + art.name}>
-              <CompareArrowsIcon className={classes.extendedIcon} />
-              Compare
-            </Fab>
-
-            {/* <Grid container direction="column">
-              <Grid container justifyContent="flex-start">
-                <h1 style={{ color: "white" }}>Albums de {art.name}</h1>
-                <ListAlbums list={props.list}></ListAlbums>
-              </Grid>
-            </Grid> */}
+    <div>
+      <Slider
+        dots
+        afterChange={indexAfterChange => handleIndexChange(indexAfterChange)}
+      >
+        {props.list.map(art => (
+          <div>
+            <CardHome artist={art}></CardHome>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <Fab variant="extended" href={"/compare/artist/" + art.name}>
+                <CompareArrowsIcon className={classes.extendedIcon} />
+                Compare
+              </Fab>
+            </div>
           </div>
-        </div>
-      ))}
-    </Slider>
+        ))}
+      </Slider>
+      <h1 style={{ color: "white" }}>Albums de {props.list[index].name}</h1>
+      <Grid container direction="column">
+        <Grid container justifyContent="center">
+          <Grid item>
+            <ListAlbums list={props.list[index].albums}></ListAlbums>
+          </Grid>
+        </Grid>
+      </Grid>
+    </div>
   );
 }
